@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Movie Search App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Results for {{ query }}</h1>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% elif results %}
+        {% for movie in results %}
+            <div class="movie-card">
+                {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/fallback.png') }}" alt="no img available">
+                {% endif %}
+
+                <h2>{{ movie.title }}</h2>
+                <p>{{ movie.rating }}</p>
+                <p>{{ movie.overview }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+            <p>No results found.</p>
+    {% endif %}
+
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="/search?query={{ query }}&page={{ page-1 }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page }} of {{ total_pages }} </span>
+
+        {% if page < total_pages %}
+            <a href="/search?query={{ query }}&page={{ page+1 }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>
